@@ -11,17 +11,16 @@ var io = socketIO(server);  //listen events through io
 
 app.use(express.static(publicPath));
 
-io.on('connection', (socket) => {  //Listen for events on server (only for connection we use io else we'll use socket)
+io.on('connection', (socket) => {  //Listen for events on server (only for connection or to emit to all we use io else we use socket)
   console.log('New user connected');
 
-  socket.emit('newMessage', {
-    from: 'keshav@example.com',
-    text: 'This is a new message from server to client',
-    createAt: 123
-  });
-
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message) => {   //emit for emitter and on for listener so this will listen from client
     console.log('createMessage', message);
+    io.emit('newMessage', {                   //This will emit to everyone
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect',()=> {
