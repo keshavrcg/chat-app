@@ -22,7 +22,7 @@ io.on('connection', (socket) => {  //Listen for events on server (only for conne
   socket.on('createMessage', (message, callback) => {   //emit for emitter and on for listener; so this will listen from client
     console.log('createMessage', message);
     io.emit('newMessage', generateMessage(message.from, message.text));   //emit to all clients
-    callback('This is from the server');
+    callback();
   });
 
   socket.on('createLocationMessage', (coords)=> {
