@@ -15,13 +15,14 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {  //Listen for events on server (only for connection or to emit to all we use io else we use socket)
   console.log('New user connected');
 
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));            //This will emit to only the client himself
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));    //This will emit to only the client himself
 
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined')); //emit to all clients except the sender
 
-  socket.on('createMessage', (message) => {   //emit for emitter and on for listener so this will listen from client
+  socket.on('createMessage', (message, callback) => {   //emit for emitter and on for listener; so this will listen from client
     console.log('createMessage', message);
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    io.emit('newMessage', generateMessage(message.from, message.text));   //emit to all clients
+    callback('This is from the server');
     // socket.broadcast.emit('newMessage', {
     //     from: message.from,
     //     text: message.text,
